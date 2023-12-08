@@ -32,5 +32,5 @@ jobs:
           script: |
             docker pull rani2909/webapp:latest
             docker stop webapp && docker rm webapp
-            docker run -d -p 3000:3000 --name webapp rani2909/webapp:latest
+            docker run -d -p 80:80 --name webapp rani2909/webapp:latest
             docker image prune -f
