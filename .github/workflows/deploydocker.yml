@@ -22,7 +22,7 @@ deploy:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull Rani2909/Dockerlab:latest
-            docker stop Dockerlab && docker rm Dockerlab
-            docker run -d -p 3000:3000 --name Dockerlab Rani2909/Dockerlab:latest
+            docker pull rani2909/webapp:latest
+            docker stop webapp && docker rm webapp
+            docker run -d -p 3000:3000 --name webapp rani2909/webapp:latest
             docker image prune -f
