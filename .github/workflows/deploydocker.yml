@@ -32,10 +32,12 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
       - name: Build and Push Docker Image to Docker Repo
         uses: rani2909/webapp
-        registry: docker.io
-        username: ${{secrets.DOC_USERNAME}}
-        password: ${{secrets.DOC_PASSWORD}}
-        dockerfile: Dockerfile
+        with:
+          image: rani2909/webapp
+          registry: docker.io
+          username: ${{secrets.DOC_USERNAME}}
+          password: ${{secrets.DOC_PASSWORD}}
+          dockerfile: Dockerfile
           script: |
             docker pull rani2909/webapp:latest
             docker stop webapp && docker rm webapp
