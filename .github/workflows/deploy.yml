@@ -49,6 +49,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            docker build -t webapp
             docker pull rani2909/webapp:latest
             docker stop webapp && docker rm webapp
             docker run -d -p 3000:3000 --name webapp rani2909/webapp:latest
