@@ -1,28 +1,48 @@
-deploy:
-  name: Deploy to EC2 on master branch push
-  runs-on: ubuntu-latest
-  needs: build_and_push_docker_image
-
-  steps:
-    - name: Checkout the files
-      uses: actions/checkout@v2
-
-    - name: Deploy to Server 1
-      uses: easingthemes/ssh-deploy@main
+name: Node.js CI
+ 
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+ 
+jobs:
+  build:
+ 
+    runs-on: ubuntu-latest
+    - name: Build and Push Docker Image to Docker Repo
+      uses: mr-smithers-excellent/docker-build-push@v4
       with:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-        REMOTE_HOST: ${{ secrets.HOST_DNS }}
-        REMOTE_USER: ${{ secrets.USERNAME }}
-        TARGET: ${{ secrets.TARGET_DIR }}
+        image: abhaythink/aaa-ci-cd
+        registry: docker.io
+        username: ${{ secrets.DOC_USERNAME }}
+        password: ${{ secrets.DOC_PASSWORD }}
+        dockerfile: Dockerfile
 
-    - name: Executing remote ssh commands using ssh key
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST_DNS }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          docker pull rani2909/webapp:latest
-          docker stop webapp && docker rm webapp
-          docker run -d -p 3000:3000 --name webapp rani2909/webapp:latest
-          docker image prune -f
+  deploy:
+    name: Deploy to EC2 on main branch push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
+
+      - name: Deploy to Server 1
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.HOST_DNS }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: ${{ secrets.TARGET_DIR }}
+
+      - name: Executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull rani2909/webapp:latest
+            docker stop webapp && docker rm webapp
+            docker run -d -p 3000:3000 --name webapp rani2909/webapp:latest
+            docker image prune -f
