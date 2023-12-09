@@ -9,15 +9,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-     - name: Build and Push Docker Image to Docker Repo
-       uses: mr-smithers-excellent/docker-build-push@v4
-       with:
-        image: abhaythink/aaa-ci-cd
-        registry: docker.io
-        username: ${{ secrets.DOC_USERNAME }}
-        password: ${{ secrets.DOC_PASSWORD }}
-        dockerfile: Dockerfile
+    steps:
+      - name: Build and Push Docker Image to Docker Repo
+        uses: mr-smithers-excellent/docker-build-push@v4
+        with:
+          image: abhaythink/aaa-ci-cd
+          registry: docker.io
+          username: ${{ secrets.DOC_USERNAME }}
+          password: ${{ secrets.DOC_PASSWORD }}
+          dockerfile: Dockerfile
 
   deploy:
     name: Deploy to EC2 on main branch push
