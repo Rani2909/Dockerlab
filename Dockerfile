@@ -1,7 +1,21 @@
-FROM nginx:alpine
+FROM node:10-alpine
 
-WORKDIR /usr/share/nginx/html
+#specify working directory for docker
+WORKDIR /app
 
-COPY index.html .
+#copy package files into working directory
+COPY package*.json /app/
 
-EXPOSE 80
+# install required dependencies
+RUN npm install
+
+#copy all contents to working directory
+COPY . /app/
+
+#command to run express server
+CMD node index.js
+
+#Alternative way to write command
+# CMD [ "node", "index.js" ]
+
+EXPOSE 3000
