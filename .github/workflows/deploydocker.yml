@@ -30,16 +30,17 @@ jobs:
           host: ${{ secrets.HOST_DNS }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-      - name: Build and Push Docker Image to Docker Repo
-        uses: rani2909/webapp
+          
+     - name: Build and Push Docker Image to Docker Repo
+        uses: mr-smithers-excellent/docker-build-push@v4
         with:
-          image: rani2909/webapp
+          image: abhaythink/aaa-ci-cd
           registry: docker.io
-          username: ${{secrets.DOC_USERNAME}}
-          password: ${{secrets.DOC_PASSWORD}}
+          username: ${{ secrets.DOC_USERNAME }}
+          password: ${{ secrets.DOC_PASSWORD }}
           dockerfile: Dockerfile
-          script: |
-            docker pull rani2909/webapp:latest
-            docker stop webapp && docker rm webapp
-            docker run -d -p 80:80 --name webapp rani2909/webapp:latest
-            docker image prune -f
+            script: |
+              docker pull rani2909/webapp:latest
+              docker stop webapp && docker rm webapp
+              docker run -d -p 80:80 --name webapp rani2909/webapp:latest
+              docker image prune -f
